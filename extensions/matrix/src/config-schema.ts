@@ -46,7 +46,7 @@ export const MatrixConfigSchema = z.object({
   initialSyncLimit: z.number().optional(),
   encryption: z.boolean().optional(),
   allowlistOnly: z.boolean().optional(),
-  groupPolicy: z.enum(["open", "disabled", "allowlist"]).optional(),
+  groupPolicy: z.enum(["open", "disabled", "allowlist", "observe"]).optional(),
   replyToMode: z.enum(["off", "first", "all"]).optional(),
   threadReplies: z.enum(["off", "inbound", "always"]).optional(),
   textChunkLimit: z.number().optional(),

@@ -172,7 +172,7 @@ async function promptZalouserAllowFrom(params: {
 function setZalouserGroupPolicy(
   cfg: OpenClawConfig,
   accountId: string,
-  groupPolicy: "open" | "allowlist" | "disabled",
+  groupPolicy: "open" | "allowlist" | "disabled" | "observe",
 ): OpenClawConfig {
   return setZalouserAccountScopedConfig(cfg, accountId, {
     groupPolicy,

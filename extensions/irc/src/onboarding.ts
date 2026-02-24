@@ -129,7 +129,7 @@ function setIrcNickServ(
 function setIrcGroupAccess(
   cfg: CoreConfig,
   accountId: string,
-  policy: "open" | "allowlist" | "disabled",
+  policy: "open" | "allowlist" | "disabled" | "observe",
   entries: string[],
 ): CoreConfig {
   if (policy !== "allowlist") {

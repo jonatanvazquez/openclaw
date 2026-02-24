@@ -7,6 +7,7 @@ import { recordChannelActivity } from "../../infra/channel-activity.js";
 import { getChildLogger } from "../../logging/logger.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import { saveMediaBuffer } from "../../media/store.js";
+import { archiveMessage, storeObservedMessage } from "../../message-store/index.js";
 import { jidToE164, resolveJidToE164 } from "../../utils.js";
 import { createWaSocket, getStatusCode, waitForWaConnection } from "../session.js";
 import { checkInboundAccessControl } from "./access-control.js";
@@ -199,6 +200,22 @@ export async function monitorWebInbox(options: {
         ? Number(msg.messageTimestamp) * 1000
         : undefined;
 
+      // Archive every inbound message (before access control filtering)
+      try {
+        const archiveBody = extractText(msg.message ?? undefined) || "";
+        archiveMessage({
+          ts: new Date(messageTimestampMs ?? Date.now()).toISOString(),
+          channel: "whatsapp",
+          type: group ? "group" : "dm",
+          groupJid: group ? remoteJid : undefined,
+          groupName: groupSubject,
+          from: senderE164 ?? from,
+          fromName: msg.pushName ?? undefined,
+          body: archiveBody,
+          mediaType: null,
+        });
+      } catch {}
+
       const access = await checkInboundAccessControl({
         accountId: options.accountId,
         from,
@@ -213,6 +230,26 @@ export async function monitorWebInbox(options: {
         remoteJid,
       });
       if (!access.allowed) {
+        continue;
+      }
+
+      // Observe-only: store the message but don't process it
+      if (access.observeOnly) {
+        try {
+          const observeBody = extractText(msg.message ?? undefined) || "";
+          storeObservedMessage({
+            ts: new Date(messageTimestampMs ?? Date.now()).toISOString(),
+            channel: "whatsapp",
+            type: group ? "group" : "dm",
+            groupJid: group ? remoteJid : undefined,
+            groupName: groupSubject,
+            from: senderE164 ?? from,
+            fromName: msg.pushName ?? undefined,
+            body: observeBody,
+            mediaType: null,
+            observeOnly: true,
+          });
+        } catch {}
         continue;
       }
 

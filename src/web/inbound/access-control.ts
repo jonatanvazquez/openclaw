@@ -19,6 +19,7 @@ export type InboundAccessControlResult = {
   shouldMarkRead: boolean;
   isSelfChat: boolean;
   resolvedAccountId: string;
+  observeOnly?: boolean;
 };
 
 const PAIRING_REPLY_HISTORY_GRACE_MS = 30_000;
@@ -143,6 +144,16 @@ export async function checkInboundAccessControl(params: {
       shouldMarkRead: false,
       isSelfChat,
       resolvedAccountId: account.accountId,
+    };
+  }
+  if (params.group && groupPolicy === "observe") {
+    logVerbose("Group message allowed in observe mode (groupPolicy: observe)");
+    return {
+      allowed: true,
+      shouldMarkRead: false,
+      isSelfChat,
+      resolvedAccountId: account.accountId,
+      observeOnly: true,
     };
   }
 
