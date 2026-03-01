@@ -148,8 +148,15 @@ export function resolveSessionDeliveryTarget(params: {
 
   const mode = params.mode ?? (explicitTo ? "explicit" : "implicit");
   const accountId = channel && channel === lastChannel ? lastAccountId : undefined;
+  const shouldSuppressImplicitThreadInSlackDm =
+    channel === "slack" && typeof to === "string" && to.toLowerCase().startsWith("user:");
   const threadId =
-    mode !== "heartbeat" && channel && channel === lastChannel ? lastThreadId : undefined;
+    mode !== "heartbeat" &&
+    channel &&
+    channel === lastChannel &&
+    !shouldSuppressImplicitThreadInSlackDm
+      ? lastThreadId
+      : undefined;
 
   const resolvedThreadId = explicitThreadId ?? threadId;
   return {

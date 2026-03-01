@@ -195,6 +195,36 @@ describe("resolveSessionDeliveryTarget", () => {
     expect(resolved.threadId).toBeUndefined();
   });
 
+  it("does not inherit threadId for implicit slack DM deliveries", () => {
+    const resolved = resolveSessionDeliveryTarget({
+      entry: {
+        sessionId: "sess-slack-dm-thread",
+        updatedAt: 1,
+        lastChannel: "slack",
+        lastTo: "user:U123",
+        lastThreadId: "1739142736.000100",
+      },
+      requestedChannel: "last",
+    });
+
+    expect(resolved.threadId).toBeUndefined();
+  });
+
+  it("keeps threadId inheritance for non-DM slack targets", () => {
+    const resolved = resolveSessionDeliveryTarget({
+      entry: {
+        sessionId: "sess-slack-channel-thread",
+        updatedAt: 1,
+        lastChannel: "slack",
+        lastTo: "channel:C123",
+        lastThreadId: "111.222",
+      },
+      requestedChannel: "last",
+    });
+
+    expect(resolved.threadId).toBe("111.222");
+  });
+
   it("falls back to a provided channel when requested is unsupported", () => {
     const resolved = resolveSessionDeliveryTarget({
       entry: {

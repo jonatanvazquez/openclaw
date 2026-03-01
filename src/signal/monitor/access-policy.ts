@@ -7,7 +7,7 @@ import {
 import { isSignalSenderAllowed, type SignalSender } from "../identity.js";
 
 type SignalDmPolicy = "open" | "pairing" | "allowlist" | "disabled";
-type SignalGroupPolicy = "open" | "allowlist" | "disabled";
+type SignalGroupPolicy = "open" | "allowlist" | "disabled" | "observe";
 
 export async function resolveSignalAccessState(params: {
   accountId: string;

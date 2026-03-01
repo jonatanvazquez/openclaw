@@ -50,7 +50,7 @@ type DiscordReactionListenerParams = {
   groupDmChannels: string[];
   dmPolicy: "open" | "pairing" | "allowlist" | "disabled";
   allowFrom: string[];
-  groupPolicy: "open" | "allowlist" | "disabled";
+  groupPolicy: "open" | "allowlist" | "disabled" | "observe";
   allowNameMatching: boolean;
   guildEntries?: Record<string, import("./allow-list.js").DiscordGuildEntryResolved>;
   logger: Logger;
@@ -220,7 +220,7 @@ type DiscordReactionIngressAuthorizationParams = {
   groupDmChannels: string[];
   dmPolicy: "open" | "pairing" | "allowlist" | "disabled";
   allowFrom: string[];
-  groupPolicy: "open" | "allowlist" | "disabled";
+  groupPolicy: "open" | "allowlist" | "disabled" | "observe";
   allowNameMatching: boolean;
   guildInfo: import("./allow-list.js").DiscordGuildEntryResolved | null;
   channelConfig?: { allowed?: boolean } | null;
@@ -313,7 +313,7 @@ async function handleDiscordReactionEvent(params: {
   groupDmChannels: string[];
   dmPolicy: "open" | "pairing" | "allowlist" | "disabled";
   allowFrom: string[];
-  groupPolicy: "open" | "allowlist" | "disabled";
+  groupPolicy: "open" | "allowlist" | "disabled" | "observe";
   allowNameMatching: boolean;
   guildEntries?: Record<string, import("./allow-list.js").DiscordGuildEntryResolved>;
   logger: Logger;

@@ -4,6 +4,7 @@ import {
   resolveDefaultGroupPolicy,
   warnMissingProviderGroupPolicyFallbackOnce,
 } from "../../config/runtime-group-policy.js";
+import type { GroupPolicy } from "../../config/types.base.js";
 import { logVerbose } from "../../globals.js";
 import { buildPairingReply } from "../../pairing/pairing-messages.js";
 import { upsertChannelPairingRequest } from "../../pairing/pairing-store.js";
@@ -26,10 +27,10 @@ const PAIRING_REPLY_HISTORY_GRACE_MS = 30_000;
 
 function resolveWhatsAppRuntimeGroupPolicy(params: {
   providerConfigPresent: boolean;
-  groupPolicy?: "open" | "allowlist" | "disabled";
-  defaultGroupPolicy?: "open" | "allowlist" | "disabled";
+  groupPolicy?: GroupPolicy;
+  defaultGroupPolicy?: GroupPolicy;
 }): {
-  groupPolicy: "open" | "allowlist" | "disabled";
+  groupPolicy: GroupPolicy;
   providerMissingFallbackApplied: boolean;
 } {
   return resolveOpenProviderRuntimeGroupPolicy({
